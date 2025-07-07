@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.svg";
 import navIcon1 from "../assets/img/nav-icon1.svg";
 import navIcon2 from "../assets/img/nav-icon2.svg";
@@ -56,6 +57,16 @@ export const NavBar = () => {
               onClick={() => onUpdateActiveLink("Account")}
             >
               Account
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/"
+              className={
+                activeLink === "Home" ? "active navbar-link" : "navbar-link"
+              }
+              onClick={() => onUpdateActiveLink("Home")}
+            >
+              Home
             </Nav.Link>
             <Nav.Link
               href="#Chi Siamo"
