@@ -1,3 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+
+
+/*************************** HOME CSS ****************************/
+
+.titolo2 {
+  color: coral;
+ margin-top: 70px;
+}
+
+
+
 /************ Default Css ************/
 * {
   margin: 0;
@@ -16,7 +31,7 @@ body {
   position: relative;
   background-color: #121212 !important;
   color: #fff !important;
-  font-family: 'Centra', sans-serif !important;
+  font-family: 'Montserrat', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -218,4 +233,50 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon:before {
 }
 nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
 	border-color: transparent;
+}
+/************ Footer Css ************/
+.footer {
+  flex-shrink: 0;
+  width: 100%;
+  padding: 0 0 30px 0;
+  background-image: url('./assets/img/footer-bg.png');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.footer img {
+  width: 120px;
+  max-width: 60vw;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .footer img {
+    width: 80px;
+  }
+}
+
+/************ App Container Css ************/
+/* Wrapper principale per layout a colonna */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Il contenuto principale cresce per riempire lo spazio */
+.app-container > *:not(.footer) {
+  flex: 1 0 auto;
+}
+
+.main-content {
+  flex: 1 0 auto;
+  padding-top: 90px; 
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 56px;
+  }
 }
