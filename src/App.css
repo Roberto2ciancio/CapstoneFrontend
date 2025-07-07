@@ -11,9 +11,35 @@
  margin-top: 70px;
 }
 
+button.ButtonHome {
+  background-color: orange !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-size: 1.2rem;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  margin-top: 24px;
+  letter-spacing: 1px;
+}
+
+button.ButtonHome:hover,
+button.ButtonHome:focus {
+  background: #ff9800 !important;
+  color: #222 !important;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  outline: none;
+}
 
 
 /************ Default Css ************/
+
+
+
 * {
   margin: 0;
   padding: 0;
@@ -26,12 +52,27 @@ html {
 }
 
 body {
-  font-weight: 400;
-  overflow-x: hidden;
-  position: relative;
-  background-color: #121212 !important;
+  min-height: 100vh;
+  background: url('./assets/img/Sfondo PcStore.png') no-repeat center center fixed;
+  background-size: cover;
+  animation: slowMove 60s infinite linear;
   color: #fff !important;
-  font-family: 'Montserrat', sans-serif;
+}
+
+@keyframes slowMove {
+  0% { background-position: 50% 50%; }
+  50% { background-position: 60% 40%; }
+  100% { background-position: 50% 50%; }
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: rgba(20, 20, 20, 0.5); /* più opaco per testo leggibile */
+  pointer-events: none;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -40,7 +81,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: normal;
 }
 
-p, a, li, button, ul {
+p, a, li, home, ul {
   margin: 0;
   padding: 0;
   line-height: normal;

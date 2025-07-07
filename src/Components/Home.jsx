@@ -1,9 +1,12 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+
   return (
-    <Container>
+    <Container className="d-flex">
       <Row>
         <Col>
           <div>
@@ -22,7 +25,13 @@ function Home() {
               <li>Garanzia estesa</li>
               <li>Spedizione rapida e sicura</li>
             </ul>
-            <button>vedi negozio</button>
+            <button
+              type="button"
+              className="ButtonHome"
+              onClick={() => navigate("/shop")}
+            >
+              vedi negozio
+            </button>
           </div>
         </Col>
       </Row>
