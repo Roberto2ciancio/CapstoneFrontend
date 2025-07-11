@@ -6,6 +6,7 @@ import navIcon1 from "../assets/img/nav-icon1.svg";
 import navIcon2 from "../assets/img/nav-icon2.svg";
 import navIcon3 from "../assets/img/nav-icon3.svg";
 import { HashLink } from "react-router-hash-link";
+import userIcon from "../assets/img/user.svg";
 
 export const NavBar = () => {
   const [activeLink, setActiveLink] = useState("home");
@@ -92,6 +93,22 @@ export const NavBar = () => {
                 <img src={navIcon3} alt="" />
               </a>
             </div>
+            {/* Icona profilo utente */}
+            <a
+              href="#account"
+              className="profile-icon"
+              style={{ marginLeft: 12 }}
+            >
+              <img
+                src={userIcon}
+                alt="Profilo utente"
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: "50%",
+                }}
+              />
+            </a>
             <HashLink to="#connect">
               <button className="vvd">
                 <span>Let’s Connect</span>

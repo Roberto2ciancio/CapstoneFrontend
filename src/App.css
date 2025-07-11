@@ -83,8 +83,8 @@ button.ButtonHome:focus {
 }
 
 .modern-btn {
-  background: linear-gradient(90deg, orange 60%, #ff9800 100%);
-  color: black !important;
+  background: linear-gradient(90deg, #222 60%, #444 100%);
+  color: white !important;
   border: none;
   border-radius: 30px;
   font-weight: 600;
@@ -96,8 +96,8 @@ button.ButtonHome:focus {
 }
 
 .modern-btn:hover, .modern-btn:focus {
-  background: linear-gradient(90deg, #ff9800 60%, orange 100%);
-  color: #222;
+  background: linear-gradient(90deg, #444 60%, #222 100%);
+  color: #fff !important;
   transform: translateY(-2px) scale(1.04);
   outline: none;
 }
@@ -188,6 +188,16 @@ p.danger {
 }
 
 /************ Navbar Css ************/
+
+.profile-icon img {
+  border: 2px solid #fff;
+  background: #222;
+  transition: box-shadow 0.2s;
+}
+.profile-icon img:hover {
+  box-shadow: 0 0 0 3px orange;
+}
+
 
 .logo2 {
   width: 200px;
@@ -389,3 +399,4 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
     padding-top: 56px;
   }
 }
+

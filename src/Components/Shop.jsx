@@ -47,7 +47,7 @@ function Shop() {
               <Card.Body>
                 <Card.Title className="text-white">{pc.name}</Card.Title>
                 <Card.Text className="text-light">{pc.description}</Card.Text>
-                <h5 className="mb-3" style={{ color: "orange" }}>
+                <h5 className="mb-3" style={{ color: "white" }}>
                   {pc.price}
                 </h5>
                 <Button className="modern-btn w-100">Acquista</Button>
