@@ -42,22 +42,14 @@ export const NavBar = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto">
             <Nav.Link
-              href="#Shop"
+              as={Link}
+              to="/shop"
               className={
                 activeLink === "Shop" ? "active navbar-link" : "navbar-link"
               }
               onClick={() => onUpdateActiveLink("Shop")}
             >
               Shop
-            </Nav.Link>
-            <Nav.Link
-              href="#Account"
-              className={
-                activeLink === "Account" ? "active navbar-link" : "navbar-link"
-              }
-              onClick={() => onUpdateActiveLink("Account")}
-            >
-              Account
             </Nav.Link>
             <Nav.Link
               as={Link}
@@ -93,27 +85,30 @@ export const NavBar = () => {
                 <img src={navIcon3} alt="" />
               </a>
             </div>
-            {/* Icona profilo utente */}
-            <a
-              href="#account"
+            {/* Immagine profilo utente più visibile */}
+            <Link
+              to="/account"
               className="profile-icon"
-              style={{ marginLeft: 12 }}
+              style={{
+                marginLeft: 24,
+                display: "inline-block",
+              }}
             >
               <img
                 src={userIcon}
                 alt="Profilo utente"
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 48,
+                  height: 48,
                   borderRadius: "50%",
+                  border: "3px solid orange",
+                  boxShadow: "0 0 0 4px rgba(255,140,0,0.15)",
+                  background: "#222",
+                  objectFit: "cover",
+                  transition: "box-shadow 0.2s",
                 }}
               />
-            </a>
-            <HashLink to="#connect">
-              <button className="vvd">
-                <span>Let’s Connect</span>
-              </button>
-            </HashLink>
+            </Link>
           </span>
         </Navbar.Collapse>
       </Container>

@@ -7,6 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import Home from "./Components/Home";
 import Shop from "./Components/Shop";
+import Auth from "./Components/Auth";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/account" element={<Auth />} />
           </Routes>
         </main>
         <Footer />
