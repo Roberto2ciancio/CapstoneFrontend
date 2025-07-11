@@ -400,3 +400,74 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   }
 }
 
+/************ Animazioni Home ************/
+
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-40px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+@keyframes fadeIn {
+  0% { opacity: 0;}
+  100% { opacity: 1;}
+}
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(40px);}
+  100% { opacity: 1; transform: translateY(0);}
+}
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.8);}
+  80% { opacity: 1; transform: scale(1.05);}
+  100% { opacity: 1; transform: scale(1);}
+}
+
+.home-section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-content {
+  background: rgba(20,20,20,0.82);
+  border-radius: 28px;
+  padding: 48px 32px 40px 32px;
+  box-shadow: 0 8px 32px 0 rgba(255,140,0,0.10), 0 4px 16px rgba(0,0,0,0.22);
+}
+
+.titolo2 {
+  color: #fff;
+  margin-bottom: 24px;
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+}
+
+.highlight {
+  color: orange;
+  font-weight: 700;
+}
+
+.home-list {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 32px 0;
+  font-size: 1.15rem;
+}
+.home-list li {
+  margin-bottom: 10px;
+  text-align: left;
+  color: #fff;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 1s cubic-bezier(.4,2,.3,1) both;
+}
+.animate-fade-in {
+  animation: fadeIn 1.3s 0.2s both;
+}
+.animate-fade-in-up {
+  animation: fadeInUp 1.2s 0.4s both;
+}
+.animate-pop-in {
+  animation: popIn 0.8s 0.8s both;
+}
+

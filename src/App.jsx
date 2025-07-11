@@ -8,6 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./Components/Home";
 import Shop from "./Components/Shop";
 import Auth from "./Components/Auth";
+import ChiSiamo from "./Components/ChiSiamo";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/account" element={<Auth />} />
+            <Route path="/chi-siamo" element={<ChiSiamo />} />
           </Routes>
         </main>
         <Footer />

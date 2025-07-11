@@ -62,7 +62,8 @@ export const NavBar = () => {
               Home
             </Nav.Link>
             <Nav.Link
-              href="#Chi Siamo"
+              as={Link}
+              to="/chi-siamo"
               className={
                 activeLink === "Chi Siamo"
                   ? "active navbar-link"
