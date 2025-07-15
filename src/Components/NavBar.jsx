@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.svg";
@@ -7,11 +7,13 @@ import navIcon2 from "../assets/img/nav-icon2.svg";
 import navIcon3 from "../assets/img/nav-icon3.svg";
 import { HashLink } from "react-router-hash-link";
 import userIcon from "../assets/img/user.svg";
-import cartIcon from "../assets/img/cart.svg"; // usa una tua icona
+import cartIcon from "../assets/img/cart.svg";
 
 export const NavBar = ({ cartCount }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState(null);
+  const [ruolo, setRuolo] = useState(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -25,6 +27,16 @@ export const NavBar = ({ cartCount }) => {
     window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const nome = localStorage.getItem("nome");
+    const cognome = localStorage.getItem("cognome");
+    const token = localStorage.getItem("token");
+    if (token && nome && cognome) {
+      setUser({ nome, cognome });
+    }
+    setRuolo(localStorage.getItem("ruolo"));
   }, []);
 
   const onUpdateActiveLink = (value) => {
@@ -74,6 +86,20 @@ export const NavBar = ({ cartCount }) => {
             >
               Chi Siamo
             </Nav.Link>
+            {ruolo === "ADMIN" && (
+              <Nav.Link
+                as={Link}
+                to="/admin/backoffice"
+                className={
+                  activeLink === "Backoffice"
+                    ? "active navbar-link"
+                    : "navbar-link"
+                }
+                onClick={() => onUpdateActiveLink("Backoffice")}
+              >
+                Backoffice
+              </Nav.Link>
+            )}
           </Nav>
           <span className="navbar-text">
             <div className="social-icon">
@@ -119,29 +145,55 @@ export const NavBar = ({ cartCount }) => {
                 </span>
               )}
             </Link>
-            <Link
-              to="/account"
-              className="profile-icon"
-              style={{
-                marginLeft: 24,
-                display: "inline-block",
-              }}
-            >
-              <img
-                src={userIcon}
-                alt="Profilo utente"
+            {user ? (
+              <span
+                className="profile-avatar"
                 style={{
+                  marginLeft: 24,
+                  display: "inline-block",
                   width: 48,
                   height: 48,
                   borderRadius: "50%",
+                  background: "orange",
+                  color: "#222",
+                  fontWeight: 700,
+                  fontSize: 22,
+                  textAlign: "center",
+                  lineHeight: "48px",
+                  cursor: "pointer",
                   border: "3px solid orange",
                   boxShadow: "0 0 0 4px rgba(255,140,0,0.15)",
-                  background: "#222",
-                  objectFit: "cover",
-                  transition: "box-shadow 0.2s",
                 }}
-              />
-            </Link>
+                onClick={() => (window.location.href = "/profile")}
+              >
+                {user.nome[0].toUpperCase()}
+                {user.cognome[0].toUpperCase()}
+              </span>
+            ) : (
+              <Link
+                to="/account"
+                className="profile-icon"
+                style={{
+                  marginLeft: 24,
+                  display: "inline-block",
+                }}
+              >
+                <img
+                  src={userIcon}
+                  alt="Profilo utente"
+                  style={{
+                    width: 48,
+                    height: 48,
+                    borderRadius: "50%",
+                    border: "3px solid orange",
+                    boxShadow: "0 0 0 4px rgba(255,140,0,0.15)",
+                    background: "#222",
+                    objectFit: "cover",
+                    transition: "box-shadow 0.2s",
+                  }}
+                />
+              </Link>
+            )}
           </span>
         </Navbar.Collapse>
       </Container>

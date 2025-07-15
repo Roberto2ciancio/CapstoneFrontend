@@ -471,3 +471,8 @@ nav.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   animation: popIn 0.8s 0.8s both;
 }
 
+.white-mode, .white-mode .card, .white-mode .container {
+  background: #fff !important;
+  color: #222 !important;
+}
+

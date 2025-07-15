@@ -1,37 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Button,
-  Badge,
-  Form,
-} from "react-bootstrap";
+import { Container, Row, Col, Card, Button, Badge } from "react-bootstrap";
 
-function ProductDetail({ products, onAddToCart }) {
+function ProductDetail({ onAddToCart }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const product = products.find((p) => p.id === parseInt(id));
-
-  // Esempio immagini aggiuntive (puoi aggiungerle nei tuoi dati prodotto)
-  const images = product?.images || [product?.image];
-  const [mainImg, setMainImg] = useState(images[0]);
+  const [product, setProduct] = useState(null);
+  const [mainImg, setMainImg] = useState("");
   const [selectedModel, setSelectedModel] = useState("base");
 
-  // Esempio modelli disponibili
-  const models = [
-    { key: "base", label: "Senza sistema operativo", price: product?.price },
-    { key: "win11", label: "Windows 11 Home", price: "€1037,34" },
-  ];
+  useEffect(() => {
+    fetch(`http://localhost:8080/api/pc-cards/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProduct(data);
+        // Usa sempre un'immagine valida
+        setMainImg(data.image || (data.images && data.images[0]) || "");
+      });
+  }, [id]);
 
   if (!product)
     return (
       <Container className="py-5">
-        <h2>Prodotto non trovato</h2>
+        <h2>Caricamento...</h2>
       </Container>
     );
+
+  // Esempio modelli disponibili
+  const models = [
+    { key: "base", label: "Senza sistema operativo", price: product.price },
+    { key: "win11", label: "Windows 11 Home", price: product.price + 99 }, // esempio
+  ];
 
   return (
     <Container className="py-5">
@@ -46,27 +45,11 @@ function ProductDetail({ products, onAddToCart }) {
               borderRadius: 18,
               boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
             }}
+            onError={(e) =>
+              (e.target.src =
+                "https://via.placeholder.com/400x400?text=No+Image")
+            }
           />
-          <div className="d-flex gap-2 mt-3">
-            {images.map((img, idx) => (
-              <img
-                key={idx}
-                src={img}
-                alt={`thumb-${idx}`}
-                style={{
-                  width: 60,
-                  height: 60,
-                  objectFit: "cover",
-                  borderRadius: 8,
-                  border:
-                    mainImg === img ? "2px solid orange" : "2px solid #222",
-                  cursor: "pointer",
-                  background: "#181818",
-                }}
-                onClick={() => setMainImg(img)}
-              />
-            ))}
-          </div>
         </Col>
         <Col md={6}>
           <Card
@@ -110,14 +93,14 @@ function ProductDetail({ products, onAddToCart }) {
                       style={{ minWidth: 180, fontWeight: 600 }}
                     >
                       {m.label} <br />
-                      <span style={{ fontWeight: 700 }}>{m.price}</span>
+                      <span style={{ fontWeight: 700 }}>{m.price}€</span>
                     </Button>
                   ))}
                 </div>
               </div>
               <div className="mb-3">
                 <h2 style={{ color: "orange", fontWeight: 700 }}>
-                  {models.find((m) => m.key === selectedModel)?.price}
+                  {models.find((m) => m.key === selectedModel)?.price}€
                 </h2>
                 <div style={{ color: "#8f8", fontSize: 15 }}>
                   Spedizione: <b>Gratuito</b> | Restituzione: <b>Gratuito</b>
@@ -141,9 +124,6 @@ function ProductDetail({ products, onAddToCart }) {
               >
                 Aggiungi al carrello
               </Button>
-              <div className="mt-3" style={{ fontSize: 15 }}>
-                <span style={{ marginLeft: 10 }}></span>
-              </div>
             </Card.Body>
           </Card>
         </Col>
