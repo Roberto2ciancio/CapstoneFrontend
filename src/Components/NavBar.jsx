@@ -7,8 +7,9 @@ import navIcon2 from "../assets/img/nav-icon2.svg";
 import navIcon3 from "../assets/img/nav-icon3.svg";
 import { HashLink } from "react-router-hash-link";
 import userIcon from "../assets/img/user.svg";
+import cartIcon from "../assets/img/cart.svg"; // usa una tua icona
 
-export const NavBar = () => {
+export const NavBar = ({ cartCount }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [scrolled, setScrolled] = useState(false);
 
@@ -86,7 +87,38 @@ export const NavBar = () => {
                 <img src={navIcon3} alt="" />
               </a>
             </div>
-            {/* Immagine profilo utente più visibile */}
+            <Link
+              to="/cart"
+              className="cart-icon"
+              style={{
+                marginLeft: 18,
+                marginRight: 8,
+                position: "relative",
+              }}
+            >
+              <img
+                src={cartIcon}
+                alt="Carrello"
+                style={{ width: 36, height: 36 }}
+              />
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    right: -6,
+                    background: "orange",
+                    color: "#222",
+                    borderRadius: "50%",
+                    padding: "2px 7px",
+                    fontSize: 14,
+                    fontWeight: 700,
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Link>
             <Link
               to="/account"
               className="profile-icon"

@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -47,10 +48,16 @@ function Shop() {
               <Card.Body>
                 <Card.Title className="text-white">{pc.name}</Card.Title>
                 <Card.Text className="text-light">{pc.description}</Card.Text>
-                <h5 className="mb-3" style={{ color: "white" }}>
+                <h5 className="mb-3" style={{ color: "orange" }}>
                   {pc.price}
                 </h5>
-                <Button className="modern-btn w-100">Acquista</Button>
+                <Button
+                  as={Link}
+                  to={`/product/${pc.id}`}
+                  className="modern-btn w-100"
+                >
+                  Acquista
+                </Button>
               </Card.Body>
             </Card>
           </Col>
