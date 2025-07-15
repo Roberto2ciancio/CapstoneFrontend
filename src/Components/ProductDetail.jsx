@@ -1,11 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, Card, Container, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Button,
+  Badge,
+  Form,
+} from "react-bootstrap";
 
 function ProductDetail({ products, onAddToCart }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const product = products.find((p) => p.id === parseInt(id));
+
+  // Esempio immagini aggiuntive (puoi aggiungerle nei tuoi dati prodotto)
+  const images = product?.images || [product?.image];
+  const [mainImg, setMainImg] = useState(images[0]);
+  const [selectedModel, setSelectedModel] = useState("base");
+
+  // Esempio modelli disponibili
+  const models = [
+    { key: "base", label: "Senza sistema operativo", price: product?.price },
+    { key: "win11", label: "Windows 11 Home", price: "€1037,34" },
+  ];
 
   if (!product)
     return (
@@ -16,39 +35,116 @@ function ProductDetail({ products, onAddToCart }) {
 
   return (
     <Container className="py-5">
-      <Row className="justify-content-center">
-        <Col md={8}>
-          <Card className="modern-card">
-            <Row>
-              <Col md={6}>
-                <Card.Img src={product.image} alt={product.name} />
-              </Col>
-              <Col md={6}>
-                <Card.Body>
-                  <Card.Title style={{ color: "orange" }}>
-                    {product.name}
-                  </Card.Title>
-                  <Card.Text>{product.description}</Card.Text>
-                  <h4 style={{ color: "orange" }}>{product.price}</h4>
-                  <Button
-                    className="modern-btn"
-                    onClick={() => {
-                      onAddToCart(product);
-                      navigate("/cart");
-                    }}
-                  >
-                    Aggiungi al carrello
-                  </Button>
-                  <Button
-                    variant="link"
-                    className="mt-2"
-                    onClick={() => navigate(-1)}
-                  >
-                    Torna allo shop
-                  </Button>
-                </Card.Body>
-              </Col>
-            </Row>
+      <Row>
+        <Col md={6} className="d-flex flex-column align-items-center">
+          <img
+            src={mainImg}
+            alt={product.name}
+            style={{
+              width: "90%",
+              maxWidth: 400,
+              borderRadius: 18,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
+            }}
+          />
+          <div className="d-flex gap-2 mt-3">
+            {images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                alt={`thumb-${idx}`}
+                style={{
+                  width: 60,
+                  height: 60,
+                  objectFit: "cover",
+                  borderRadius: 8,
+                  border:
+                    mainImg === img ? "2px solid orange" : "2px solid #222",
+                  cursor: "pointer",
+                  background: "#181818",
+                }}
+                onClick={() => setMainImg(img)}
+              />
+            ))}
+          </div>
+        </Col>
+        <Col md={6}>
+          <Card
+            style={{
+              background: "rgba(30,30,30,0.97)",
+              color: "#fff",
+              border: "none",
+            }}
+          >
+            <Card.Body>
+              <div className="d-flex align-items-center mb-2">
+                <h3
+                  style={{ color: "orange", fontWeight: 700, marginRight: 12 }}
+                >
+                  {product.name}
+                </h3>
+                <Badge
+                  bg="warning"
+                  text="dark"
+                  style={{ fontSize: 16, marginLeft: 8 }}
+                >
+                  4,6★
+                </Badge>
+                <span style={{ marginLeft: 8, fontSize: 14, color: "#bbb" }}>
+                  330 Recensioni
+                </span>
+              </div>
+              <div className="mb-3" style={{ color: "#aaa" }}>
+                {product.description}
+              </div>
+              <div className="mb-3">
+                <span style={{ fontWeight: 600 }}>Selezione del modello:</span>
+                <div className="d-flex gap-3 mt-2">
+                  {models.map((m) => (
+                    <Button
+                      key={m.key}
+                      variant={
+                        selectedModel === m.key ? "warning" : "outline-warning"
+                      }
+                      onClick={() => setSelectedModel(m.key)}
+                      style={{ minWidth: 180, fontWeight: 600 }}
+                    >
+                      {m.label} <br />
+                      <span style={{ fontWeight: 700 }}>{m.price}</span>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-3">
+                <h2 style={{ color: "orange", fontWeight: 700 }}>
+                  {models.find((m) => m.key === selectedModel)?.price}
+                </h2>
+                <div style={{ color: "#8f8", fontSize: 15 }}>
+                  Spedizione: <b>Gratuito</b> | Restituzione: <b>Gratuito</b>
+                  <br />
+                  <span style={{ color: "#6f6" }}>
+                    Ricevilo in 2-4 giorni lavorativi
+                  </span>
+                </div>
+              </div>
+              <Button
+                className="modern-btn w-100"
+                style={{ fontSize: 20, padding: "12px 0" }}
+                onClick={() => {
+                  onAddToCart({
+                    ...product,
+                    selectedModel,
+                    price: models.find((m) => m.key === selectedModel)?.price,
+                  });
+                  navigate("/cart");
+                }}
+              >
+                Aggiungi al carrello
+              </Button>
+              <div className="mt-3" style={{ fontSize: 15 }}>
+                <span style={{ marginLeft: 10 }}></span>
+              </div>
+            </Card.Body>
           </Card>
         </Col>
       </Row>
