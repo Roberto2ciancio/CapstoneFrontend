@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/logo.svg";
@@ -14,6 +14,7 @@ export const NavBar = ({ cartCount }) => {
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState(null);
   const [ruolo, setRuolo] = useState(null);
+  const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || "");
 
   useEffect(() => {
     const onScroll = () => {
@@ -37,6 +38,12 @@ export const NavBar = ({ cartCount }) => {
       setUser({ nome, cognome });
     }
     setRuolo(localStorage.getItem("ruolo"));
+  }, []);
+
+  useEffect(() => {
+    const onStorage = () => setAvatar(localStorage.getItem("avatar") || "");
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
   const onUpdateActiveLink = (value) => {
@@ -103,13 +110,18 @@ export const NavBar = ({ cartCount }) => {
           </Nav>
           <span className="navbar-text">
             <div className="social-icon">
-              <a href="#">
-                <img src={navIcon1} alt="" />
+              <a
+                href="https://www.linkedin.com/in/roberto-ciancio-373ba5293/
+"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={navIcon1} alt="Instagram" />
               </a>
-              <a href="#">
-                <img src={navIcon2} alt="" />
+              <a href="" target="_blank" rel="noopener noreferrer">
+                <img src={navIcon2} alt="LinkedIn" />
               </a>
-              <a href="#">
+              <a href="https://www.instagram.com/robertociancio__/">
                 <img src={navIcon3} alt="" />
               </a>
             </div>
@@ -146,29 +158,57 @@ export const NavBar = ({ cartCount }) => {
               )}
             </Link>
             {user ? (
-              <span
-                className="profile-avatar"
+              <Link
+                to="/profile"
                 style={{
-                  marginLeft: 24,
+                  textDecoration: "none",
+                  marginLeft: 12,
                   display: "inline-block",
-                  width: 48,
-                  height: 48,
-                  borderRadius: "50%",
-                  background: "orange",
-                  color: "#222",
-                  fontWeight: 700,
-                  fontSize: 22,
-                  textAlign: "center",
-                  lineHeight: "48px",
-                  cursor: "pointer",
-                  border: "3px solid orange",
-                  boxShadow: "0 0 0 4px rgba(255,140,0,0.15)",
                 }}
-                onClick={() => (window.location.href = "/profile")}
               >
-                {user.nome[0].toUpperCase()}
-                {user.cognome[0].toUpperCase()}
-              </span>
+                <div
+                  style={{
+                    width: 38,
+                    height: 38,
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    background:
+                      "linear-gradient(135deg, orange 60%, #23272b 100%)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {avatar ? (
+                    <img
+                      src={avatar}
+                      alt="avatar"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        borderRadius: "50%",
+                      }}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        setAvatar("");
+                        localStorage.setItem("avatar", "");
+                      }}
+                    />
+                  ) : (
+                    <span
+                      style={{
+                        color: "#23272b",
+                        fontWeight: 700,
+                        fontSize: 18,
+                      }}
+                    >
+                      {localStorage.getItem("nome")?.[0] || ""}
+                      {localStorage.getItem("cognome")?.[0] || ""}
+                    </span>
+                  )}
+                </div>
+              </Link>
             ) : (
               <Link
                 to="/account"

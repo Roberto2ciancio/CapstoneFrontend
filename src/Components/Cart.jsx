@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Container, Table, Button, Form, Alert } from "react-bootstrap";
 
 function Cart({ cart, setCart, onRemove }) {
+  const navigate = useNavigate();
   const [showCheckout, setShowCheckout] = useState(false);
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
@@ -14,22 +16,26 @@ function Cart({ cart, setCart, onRemove }) {
   const handleCheckout = async (e) => {
     e.preventDefault();
     setError("");
-    // Validazione semplice
     if (!cardNumber || !expiry || !cvv) {
       setError("Compila tutti i campi della carta.");
       return;
     }
-    // Simula invio email chiamando il backend
-    const email = localStorage.getItem("email");
-    const nome = localStorage.getItem("nome");
+    // Prendi i dati dal localStorage
+    const nomeCliente = localStorage.getItem("nome") || "";
+    const destinatario = localStorage.getItem("email") || "";
+    const numeroOrdine = "ORD-" + Math.floor(Math.random() * 1000000); // Genera un numero ordine fittizio
+
     try {
       const res = await fetch("http://localhost:8080/api/send-confirmation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + localStorage.getItem("token"),
         },
-        body: JSON.stringify({ email, nome, totale: total }),
+        body: JSON.stringify({
+          nomeCliente,
+          numeroOrdine,
+          destinatario,
+        }),
       });
       if (res.ok) {
         setEmailSent(true);
@@ -40,6 +46,16 @@ function Cart({ cart, setCart, onRemove }) {
       }
     } catch {
       setError("Errore di rete.");
+    }
+  };
+
+  // Quando l'utente clicca su checkout, controlla se è loggato
+  const handleShowCheckout = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/account");
+    } else {
+      setShowCheckout(true);
     }
   };
 
@@ -84,11 +100,11 @@ function Cart({ cart, setCart, onRemove }) {
               </tr>
             </tbody>
           </Table>
-          {!showCheckout && (
+          {cart.length > 0 && !showCheckout && (
             <Button
               variant="success"
               className="mt-3"
-              onClick={() => setShowCheckout(true)}
+              onClick={handleShowCheckout}
             >
               Procedi al checkout
             </Button>

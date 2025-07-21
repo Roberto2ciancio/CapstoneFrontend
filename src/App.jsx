@@ -17,14 +17,14 @@ import Profile from "./Components/Profile";
 import AddPcCardAdmin from "./Components/AddPcCardAdmin";
 
 function App() {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => {
+    // Carica il carrello da localStorage all'avvio
+    const saved = localStorage.getItem("cart");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    setCart(savedCart);
-  }, []);
-
-  useEffect(() => {
+    // Salva il carrello su localStorage ogni volta che cambia
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
@@ -56,7 +56,7 @@ function App() {
             />
             <Route path="/account" element={<Auth />} />
             <Route path="/chi-siamo" element={<ChiSiamo />} />
-            <Route path="/admin/add-pc-card" element={<AddPcCard />} />
+            <Route path="/admin/add-pc-card" element={<AddPcCardAdmin />} />
             <Route path="/admin/backoffice" element={<AddPcCardAdmin />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

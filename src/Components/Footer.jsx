@@ -1,3 +1,4 @@
+import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 
 import logo from "../assets/img/logo.svg";
@@ -7,26 +8,39 @@ import navIcon3 from "../assets/img/nav-icon3.svg";
 
 export const Footer = () => {
   return (
-    <footer className="footer">
+    <footer
+      style={{
+        background: "#23272b",
+        color: "#fff",
+        padding: "2rem 0 1rem 0",
+        marginTop: "auto",
+        borderTop: "2px solid orange",
+      }}
+    >
       <Container>
-        <Row className="align-items-center">
-          <Col size={12} md={6} sm={6}>
-            <p>
-              Copyright {new Date().getFullYear()} diritti riservati a{" "}
-              <img src={logo} alt="Logo" />{" "}
-            </p>
+        <Row>
+          <Col md={6} className="mb-3 mb-md-0">
+            <h5 style={{ color: "orange", fontWeight: 700 }}>
+              Capstone PC Shop
+            </h5>
+            <div style={{ color: "#ccc", fontSize: "0.95rem" }}>
+              &copy; {new Date().getFullYear()} Capstone PC Shop. Tutti i
+              diritti riservati.
+            </div>
           </Col>
-          <Col size={12} md={6} sm={6} className="text-center text-sm-end">
-            <div className="social-icon">
-              <a href="#">
-                <img src={navIcon1} alt="Icon" />
-              </a>
-              <a href="#">
-                <img src={navIcon2} alt="Icon" />
-              </a>
-              <a href="#">
-                <img src={navIcon3} alt="Icon" />
-              </a>
+          <Col md={6} className="text-md-end">
+            <h6 style={{ color: "orange", fontWeight: 600 }}>Contatti</h6>
+            <div style={{ color: "#ccc", fontSize: "0.95rem" }}>
+              <div>
+                <strong>Email:</strong> info@capstonepcshop.it
+              </div>
+              <div>
+                <strong>Telefono:</strong> +39 02 1234 5678
+              </div>
+              <div>
+                <strong>Indirizzo:</strong> Via delle Innovazioni 42, 20100
+                Milano (MI)
+              </div>
             </div>
           </Col>
         </Row>
@@ -34,3 +48,5 @@ export const Footer = () => {
     </footer>
   );
 };
+
+export default Footer;

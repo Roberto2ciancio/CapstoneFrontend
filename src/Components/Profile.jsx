@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Card, Container, Button, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
@@ -6,7 +7,8 @@ function Profile() {
   const [cognome, setCognome] = useState("");
   const [username, setUsername] = useState("");
   const [avatar, setAvatar] = useState("");
-  const [whiteMode, setWhiteMode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [ruolo, setRuolo] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,87 +16,157 @@ function Profile() {
     setCognome(localStorage.getItem("cognome") || "");
     setUsername(localStorage.getItem("username") || "");
     setAvatar(localStorage.getItem("avatar") || "");
-    setWhiteMode(localStorage.getItem("whiteMode") === "true");
+    setEmail(localStorage.getItem("email") || "");
+    setRuolo(localStorage.getItem("ruolo") || "");
   }, []);
 
-  const handleSave = () => {
+  const handleSave = (e) => {
+    e.preventDefault();
     localStorage.setItem("nome", nome);
     localStorage.setItem("cognome", cognome);
     localStorage.setItem("username", username);
     localStorage.setItem("avatar", avatar);
-    localStorage.setItem("whiteMode", whiteMode);
     window.location.reload();
   };
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate("/"); // Torna alla home
-    window.location.reload();
+    navigate("/account");
   };
 
   return (
-    <div className={`container py-5 ${whiteMode ? "white-mode" : ""}`}>
-      <h2>Profilo Utente</h2>
-      <div>
-        <label>Immagine profilo (URL):</label>
-        <input
-          value={avatar}
-          onChange={(e) => setAvatar(e.target.value)}
-          className="form-control mb-2"
-        />
-        {avatar ? (
-          <img
-            src={avatar}
-            alt="avatar"
-            style={{ width: 80, height: 80, borderRadius: "50%" }}
-          />
-        ) : (
+    <Container
+      className="py-5 d-flex justify-content-center align-items-center"
+      style={{ minHeight: "70vh" }}
+    >
+      <Card
+        style={{
+          minWidth: 350,
+          maxWidth: 400,
+          background: "rgba(30,30,30,0.97)",
+          color: "#fff",
+          border: "none",
+          borderRadius: 18,
+          boxShadow: "0 4px 24px 0 rgba(255,140,0,0.18)",
+        }}
+        className="p-3"
+      >
+        <Card.Body className="text-center">
           <div
             style={{
-              width: 80,
-              height: 80,
+              width: 90,
+              height: 90,
               borderRadius: "50%",
-              background: "orange",
-              color: "#222",
+              background: "linear-gradient(135deg, orange 60%, #23272b 100%)",
+              margin: "0 auto 1.5rem auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 38,
+              color: "#23272b",
               fontWeight: 700,
-              fontSize: 32,
-              textAlign: "center",
-              lineHeight: "80px",
+              boxShadow: "0 2px 12px rgba(255,140,0,0.18)",
+              overflow: "hidden",
             }}
           >
-            {nome[0]?.toUpperCase()}
-            {cognome[0]?.toUpperCase()}
+            {avatar ? (
+              <img
+                src={avatar}
+                alt="avatar"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                onError={(e) => {
+                  e.target.onerror = null;
+                  setAvatar("");
+                }}
+              />
+            ) : (
+              <>
+                {nome[0] || ""}
+                {cognome[0] || ""}
+              </>
+            )}
           </div>
-        )}
-      </div>
-      <div className="mt-3">
-        <label>Username:</label>
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="form-control mb-2"
-        />
-      </div>
-      <div className="form-check form-switch mt-3">
-        <input
-          className="form-check-input"
-          type="checkbox"
-          checked={whiteMode}
-          onChange={(e) => setWhiteMode(e.target.checked)}
-          id="whiteModeSwitch"
-        />
-        <label className="form-check-label" htmlFor="whiteModeSwitch">
-          White Mode
-        </label>
-      </div>
-      <button className="btn btn-warning mt-3" onClick={handleSave}>
-        Salva
-      </button>
-      <hr />
-      <button className="btn btn-danger mt-2" onClick={handleLogout}>
-        Logout
-      </button>
-    </div>
+          <Form onSubmit={handleSave}>
+            <Form.Group className="mb-2">
+              <Form.Label style={{ color: "#ffa500" }}>Nome</Form.Label>
+              <Form.Control
+                type="text"
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label style={{ color: "#ffa500" }}>Cognome</Form.Label>
+              <Form.Control
+                type="text"
+                value={cognome}
+                onChange={(e) => setCognome(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label style={{ color: "#ffa500" }}>Username</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-2">
+              <Form.Label style={{ color: "#ffa500" }}>
+                URL Immagine profilo
+              </Form.Label>
+              <Form.Control
+                type="text"
+                value={avatar}
+                onChange={(e) => setAvatar(e.target.value)}
+                placeholder="https://..."
+              />
+            </Form.Group>
+            <div className="mb-2" style={{ color: "#ccc", fontSize: "1.1rem" }}>
+              <i className="bi bi-envelope" style={{ marginRight: 6 }}></i>
+              {email}
+            </div>
+            <div
+              className="mb-3"
+              style={{
+                color: ruolo === "ADMIN" ? "orange" : "#aaa",
+                fontWeight: 600,
+              }}
+            >
+              <i className="bi bi-person-badge" style={{ marginRight: 6 }}></i>
+              {ruolo === "ADMIN" ? "Amministratore" : "Utente"}
+            </div>
+            <Button
+              variant="warning"
+              type="submit"
+              style={{
+                fontWeight: 600,
+                borderRadius: 8,
+                width: "100%",
+              }}
+            >
+              Salva modifiche
+            </Button>
+          </Form>
+          <Button
+            variant="outline-light"
+            className="mt-3"
+            style={{ borderRadius: 8, width: "100%" }}
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }
 
