@@ -11,7 +11,7 @@ import Auth from "./Components/Auth";
 import ChiSiamo from "./Components/ChiSiamo";
 import ProductDetail from "./Components/ProductDetail";
 import Cart from "./Components/Cart";
-import products from "./Components/productsData";
+
 import AddPcCard from "./Components/AddPcCard";
 import Profile from "./Components/Profile";
 import AddPcCardAdmin from "./Components/AddPcCardAdmin";

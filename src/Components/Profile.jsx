@@ -15,9 +15,10 @@ function Profile() {
     setNome(localStorage.getItem("nome") || "");
     setCognome(localStorage.getItem("cognome") || "");
     setUsername(localStorage.getItem("username") || "");
-    setAvatar(localStorage.getItem("avatar") || "");
-    setEmail(localStorage.getItem("email") || "");
+    const email = localStorage.getItem("email") || "";
+    setEmail(email);
     setRuolo(localStorage.getItem("ruolo") || "");
+    setAvatar(localStorage.getItem(`avatar_${email}`) || "");
   }, []);
 
   const handleSave = (e) => {
@@ -25,7 +26,7 @@ function Profile() {
     localStorage.setItem("nome", nome);
     localStorage.setItem("cognome", cognome);
     localStorage.setItem("username", username);
-    localStorage.setItem("avatar", avatar);
+    localStorage.setItem(`avatar_${email}`, avatar); // salva avatar per utente
     window.location.reload();
   };
 
@@ -116,7 +117,6 @@ function Profile() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                required
               />
             </Form.Group>
             <Form.Group className="mb-2">

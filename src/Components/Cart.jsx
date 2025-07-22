@@ -24,12 +24,14 @@ function Cart({ cart, setCart, onRemove }) {
     const nomeCliente = localStorage.getItem("nome") || "";
     const destinatario = localStorage.getItem("email") || "";
     const numeroOrdine = "ORD-" + Math.floor(Math.random() * 1000000); // Genera un numero ordine fittizio
+    const token = localStorage.getItem("token");
 
     try {
       const res = await fetch("http://localhost:8080/api/send-confirmation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify({
           nomeCliente,

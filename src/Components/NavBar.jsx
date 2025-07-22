@@ -10,11 +10,11 @@ import userIcon from "../assets/img/user.svg";
 import cartIcon from "../assets/img/cart.svg";
 
 export const NavBar = ({ cartCount }) => {
-  const [activeLink, setActiveLink] = useState("home");
-  const [scrolled, setScrolled] = useState(false);
+  const [avatar, setAvatar] = useState("");
   const [user, setUser] = useState(null);
-  const [ruolo, setRuolo] = useState(null);
-  const [avatar, setAvatar] = useState(localStorage.getItem("avatar") || "");
+  const [ruolo, setRuolo] = useState("");
+  const [scrolled, setScrolled] = useState(false);
+  const [activeLink, setActiveLink] = useState("Home");
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,15 +33,22 @@ export const NavBar = ({ cartCount }) => {
   useEffect(() => {
     const nome = localStorage.getItem("nome");
     const cognome = localStorage.getItem("cognome");
+    const email = localStorage.getItem("email");
     const token = localStorage.getItem("token");
     if (token && nome && cognome) {
-      setUser({ nome, cognome });
+      setUser({ nome, cognome, email });
     }
     setRuolo(localStorage.getItem("ruolo"));
+    // Prendi avatar associato all'email
+    setAvatar(localStorage.getItem(`avatar_${email}`) || "");
   }, []);
 
   useEffect(() => {
-    const onStorage = () => setAvatar(localStorage.getItem("avatar") || "");
+    // Aggiorna avatar se cambia in localStorage
+    const onStorage = () => {
+      const email = localStorage.getItem("email");
+      setAvatar(localStorage.getItem(`avatar_${email}`) || "");
+    };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
   }, []);
@@ -192,7 +199,7 @@ export const NavBar = ({ cartCount }) => {
                       onError={(e) => {
                         e.target.onerror = null;
                         setAvatar("");
-                        localStorage.setItem("avatar", "");
+                        localStorage.removeItem(`avatar_${user.email}`);
                       }}
                     />
                   ) : (
@@ -203,8 +210,8 @@ export const NavBar = ({ cartCount }) => {
                         fontSize: 18,
                       }}
                     >
-                      {localStorage.getItem("nome")?.[0] || ""}
-                      {localStorage.getItem("cognome")?.[0] || ""}
+                      {user.nome?.[0] || ""}
+                      {user.cognome?.[0] || ""}
                     </span>
                   )}
                 </div>
