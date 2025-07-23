@@ -8,6 +8,14 @@ function AddPcCardAdmin() {
   const [message, setMessage] = useState("");
   const [products, setProducts] = useState([]);
   const [editId, setEditId] = useState(null);
+  const [compType, setCompType] = useState("CPU");
+  const [compName, setCompName] = useState("");
+  const [compPrice, setCompPrice] = useState("");
+  const [compMessage, setCompMessage] = useState("");
+  const [components, setComponents] = useState([]);
+  const [editCompId, setEditCompId] = useState(null);
+  const [editCompName, setEditCompName] = useState("");
+  const [editCompPrice, setEditCompPrice] = useState("");
 
   // Carica le card esistenti
   useEffect(() => {
@@ -87,6 +95,43 @@ function AddPcCardAdmin() {
     setMessage("");
   };
 
+  // Carica i componenti esistenti
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8080/api/components", {
+      headers: token ? { Authorization: "Bearer " + token } : {},
+    })
+      .then((res) => res.json())
+      .then((data) => setComponents(Array.isArray(data) ? data : []));
+  }, [compMessage]);
+
+  // Aggiungi componente
+  const handleComponentSubmit = async (e) => {
+    e.preventDefault();
+    setCompMessage("");
+    const token = localStorage.getItem("token");
+    const newComponent = {
+      type: compType,
+      name: compName,
+      price: Number(compPrice),
+    };
+    const res = await fetch("http://localhost:8080/api/components", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(newComponent),
+    });
+    if (res.ok) {
+      setCompMessage("Componente aggiunto con successo!");
+      setCompName("");
+      setCompPrice("");
+    } else {
+      setCompMessage("Errore nell'aggiunta del componente.");
+    }
+  };
+
   // Solo admin può vedere il form
   const ruolo = localStorage.getItem("ruolo");
   if (ruolo !== "ADMIN") {
@@ -162,6 +207,161 @@ function AddPcCardAdmin() {
         )}
       </form>
       {message && <div className="mt-3">{message}</div>}
+
+      {/* --- NUOVO FORM COMPONENTI --- */}
+      <hr />
+      <h3 className="mb-3" style={{ color: "orange" }}>
+        Aggiungi componente PC
+      </h3>
+      <form onSubmit={handleComponentSubmit}>
+        <div className="mb-3">
+          <label>Tipo</label>
+          <select
+            className="form-control"
+            value={compType}
+            onChange={(e) => setCompType(e.target.value)}
+          >
+            <option value="CPU">CPU</option>
+            <option value="RAM">RAM</option>
+            <option value="GPU">GPU</option>
+            <option value="Storage">Storage</option>
+            <option value="Case">Case</option>
+          </select>
+        </div>
+        <div className="mb-3">
+          <label>Nome componente</label>
+          <input
+            className="form-control"
+            value={compName}
+            onChange={(e) => setCompName(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-3">
+          <label>Prezzo (€)</label>
+          <input
+            className="form-control"
+            type="number"
+            value={compPrice}
+            onChange={(e) => setCompPrice(e.target.value)}
+            required
+            min={0}
+          />
+        </div>
+        <button type="submit" className="btn btn-warning">
+          Aggiungi componente
+        </button>
+      </form>
+      {compMessage && <div className="mt-3">{compMessage}</div>}
+
+      {/* Lista componenti aggiunti */}
+      <table className="table table-dark table-bordered mt-4">
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Nome</th>
+            <th>Prezzo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {components.map((c) => (
+            <tr key={c.id}>
+              <td>{c.type}</td>
+              <td>
+                {editCompId === c.id ? (
+                  <input
+                    value={editCompName}
+                    onChange={(e) => setEditCompName(e.target.value)}
+                    className="form-control"
+                  />
+                ) : (
+                  c.name
+                )}
+              </td>
+              <td>
+                {editCompId === c.id ? (
+                  <input
+                    type="number"
+                    value={editCompPrice}
+                    onChange={(e) => setEditCompPrice(e.target.value)}
+                    className="form-control"
+                  />
+                ) : (
+                  c.price + "€"
+                )}
+              </td>
+              <td>
+                {editCompId === c.id ? (
+                  <>
+                    <button
+                      className="btn btn-success btn-sm me-2"
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        await fetch(
+                          `http://localhost:8080/api/components/${c.id}`,
+                          {
+                            method: "PUT",
+                            headers: {
+                              "Content-Type": "application/json",
+                              Authorization: "Bearer " + token,
+                            },
+                            body: JSON.stringify({
+                              type: c.type,
+                              name: editCompName,
+                              price: Number(editCompPrice),
+                            }),
+                          }
+                        );
+                        setEditCompId(null);
+                        setCompMessage("Componente modificato!");
+                      }}
+                    >
+                      Salva
+                    </button>
+                    <button
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => setEditCompId(null)}
+                    >
+                      Annulla
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-warning btn-sm me-2"
+                      onClick={() => {
+                        setEditCompId(c.id);
+                        setEditCompName(c.name);
+                        setEditCompPrice(c.price);
+                      }}
+                    >
+                      Modifica
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={async () => {
+                        const token = localStorage.getItem("token");
+                        await fetch(
+                          `http://localhost:8080/api/components/${c.id}`,
+                          {
+                            method: "DELETE",
+                            headers: {
+                              Authorization: "Bearer " + token,
+                            },
+                          }
+                        );
+                        setCompMessage("Componente eliminato!");
+                      }}
+                    >
+                      Elimina
+                    </button>
+                  </>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <hr />
       <h3 className="mb-3" style={{ color: "orange" }}>
