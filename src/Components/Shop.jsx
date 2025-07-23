@@ -82,41 +82,51 @@ function Shop() {
                   }}
                 />
               </div>
-              <Card.Body style={{ padding: "0.7rem" }}>
-                <Card.Title
-                  className="text-white"
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    minHeight: 38,
-                  }}
-                >
-                  {pc.name}
-                </Card.Title>
-                <Card.Text
-                  className="text-light"
-                  style={{
-                    fontSize: "0.9rem",
-                    minHeight: 38,
-                    color: "#ccc",
-                  }}
-                >
-                  {pc.description}
-                </Card.Text>
-                <h5
-                  className="mb-2"
-                  style={{
-                    color: "orange",
-                    fontWeight: 700,
-                    fontSize: "1.1rem",
-                  }}
-                >
-                  {pc.price}€
-                </h5>
+              <Card.Body
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  minHeight: "180px",
+                  padding: "0.7rem",
+                }}
+              >
+                <div>
+                  <Card.Title
+                    className="text-white"
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      minHeight: 38,
+                    }}
+                  >
+                    {pc.name}
+                  </Card.Title>
+                  <Card.Text
+                    className="text-light"
+                    style={{
+                      fontSize: "0.9rem",
+                      minHeight: 38,
+                      color: "#ccc",
+                    }}
+                  >
+                    {pc.description}
+                  </Card.Text>
+                  <h5
+                    className="mb-2"
+                    style={{
+                      color: "orange",
+                      fontWeight: 700,
+                      fontSize: "1.1rem",
+                    }}
+                  >
+                    {pc.price}€
+                  </h5>
+                </div>
                 <Button
                   as={Link}
                   to={`/product/${pc.id}`}
-                  className="w-100"
+                  className="w-100 mt-2"
                   style={{
                     background: "orange",
                     border: "none",

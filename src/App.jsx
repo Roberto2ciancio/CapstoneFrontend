@@ -11,19 +11,18 @@ import Auth from "./Components/Auth";
 import ChiSiamo from "./Components/ChiSiamo";
 import ProductDetail from "./Components/ProductDetail";
 import Cart from "./Components/Cart";
+import PcBuilder from "./Components/PcBuilder";
 
 import Profile from "./Components/Profile";
 import AddPcCardAdmin from "./Components/AddPcCardAdmin";
 
 function App() {
   const [cart, setCart] = useState(() => {
-    // Carica il carrello da localStorage all'avvio
     const saved = localStorage.getItem("cart");
     return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
-    // Salva il carrello su localStorage ogni volta che cambia
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
@@ -58,6 +57,16 @@ function App() {
             <Route path="/admin/add-pc-card" element={<AddPcCardAdmin />} />
             <Route path="/admin/backoffice" element={<AddPcCardAdmin />} />
             <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/pc-builder"
+              element={
+                localStorage.getItem("token") ? (
+                  <PcBuilder onAddToCart={handleAddToCart} />
+                ) : (
+                  <Auth />
+                )
+              }
+            />
           </Routes>
         </main>
         <Footer />

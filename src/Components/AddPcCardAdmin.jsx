@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 function AddPcCardAdmin() {
   const [name, setName] = useState("");
@@ -6,82 +6,26 @@ function AddPcCardAdmin() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
-  const [products, setProducts] = useState([]);
-  const [editId, setEditId] = useState(null);
-  const [compType, setCompType] = useState("CPU");
-  const [compName, setCompName] = useState("");
-  const [compPrice, setCompPrice] = useState("");
-  const [compMessage, setCompMessage] = useState("");
-  const [components, setComponents] = useState([]);
-  const [editCompId, setEditCompId] = useState(null);
-  const [editCompName, setEditCompName] = useState("");
-  const [editCompPrice, setEditCompPrice] = useState("");
 
-  // Carica le card esistenti
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/api/pc-cards", {
-      headers: token ? { Authorization: "Bearer " + token } : {},
-    })
-      .then((res) => res.json())
-      .then((data) => setProducts(Array.isArray(data) ? data : []));
-  }, [message]);
-
-  // Aggiungi o modifica card
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nuovaCard = { name, description, price, image };
-    const token = localStorage.getItem("token");
-    let res;
-    if (editId) {
-      // Modifica
-      res = await fetch(`http://localhost:8080/api/pc-cards/${editId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(nuovaCard),
-      });
-      if (res.ok) {
-        setMessage("PC Card modificata con successo!");
-      } else {
-        setMessage("Errore nella modifica della PC Card.");
-      }
-    } else {
-      // Aggiungi
-      res = await fetch("http://localhost:8080/api/pc-cards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify(nuovaCard),
-      });
-      if (res.ok) {
-        setMessage("PC Card aggiunta con successo!");
-      } else {
-        setMessage("Errore nell'aggiunta della PC Card.");
-      }
-    }
-    setName("");
-    setDescription("");
-    setPrice("");
-    setImage("");
-    setEditId(null);
-  };
-
-  // Elimina card
-  const handleDelete = async (id) => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`http://localhost:8080/api/pc-cards/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: "Bearer " + token },
+    const res = await fetch("http://localhost:8080/api/pc-cards", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify(nuovaCard),
     });
     if (res.ok) {
-      setMessage("PC Card eliminata!");
+      setMessage("PC Card aggiunta con successo!");
+      setName("");
+      setDescription("");
+      setPrice("");
+      setImage("");
     } else {
-      setMessage("Errore nell'eliminazione.");
+      setMessage("Errore nell'aggiunta della PC Card.");
     }
   };
 
@@ -93,43 +37,6 @@ function AddPcCardAdmin() {
     setImage(pc.image);
     setEditId(pc.id);
     setMessage("");
-  };
-
-  // Carica i componenti esistenti
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/api/components", {
-      headers: token ? { Authorization: "Bearer " + token } : {},
-    })
-      .then((res) => res.json())
-      .then((data) => setComponents(Array.isArray(data) ? data : []));
-  }, [compMessage]);
-
-  // Aggiungi componente
-  const handleComponentSubmit = async (e) => {
-    e.preventDefault();
-    setCompMessage("");
-    const token = localStorage.getItem("token");
-    const newComponent = {
-      type: compType,
-      name: compName,
-      price: Number(compPrice),
-    };
-    const res = await fetch("http://localhost:8080/api/components", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify(newComponent),
-    });
-    if (res.ok) {
-      setCompMessage("Componente aggiunto con successo!");
-      setCompName("");
-      setCompPrice("");
-    } else {
-      setCompMessage("Errore nell'aggiunta del componente.");
-    }
   };
 
   // Solo admin può vedere il form
@@ -146,7 +53,7 @@ function AddPcCardAdmin() {
   return (
     <div className="container py-5">
       <h2 className="mb-4" style={{ color: "orange" }}>
-        {editId ? "Modifica PC Card" : "Backoffice: Aggiungi un nuovo PC"}
+        Backoffice: Aggiungi un nuovo PC
       </h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -187,72 +94,10 @@ function AddPcCardAdmin() {
           />
         </div>
         <button type="submit" className="btn btn-warning">
-          {editId ? "Salva modifiche" : "Aggiungi"}
+          Aggiungi
         </button>
-        {editId && (
-          <button
-            type="button"
-            className="btn btn-secondary ms-2"
-            onClick={() => {
-              setName("");
-              setDescription("");
-              setPrice("");
-              setImage("");
-              setEditId(null);
-              setMessage("");
-            }}
-          >
-            Annulla
-          </button>
-        )}
       </form>
       {message && <div className="mt-3">{message}</div>}
-
-      <hr />
-      <h3 className="mb-3" style={{ color: "orange" }}>
-        Gestione PC Card
-      </h3>
-      <table className="table table-dark table-bordered">
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Descrizione</th>
-            <th>Prezzo</th>
-            <th>Immagine</th>
-            <th>Azioni</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((pc) => (
-            <tr key={pc.id}>
-              <td>{pc.name}</td>
-              <td>{pc.description}</td>
-              <td>{pc.price}€</td>
-              <td>
-                <img
-                  src={pc.image}
-                  alt={pc.name}
-                  style={{ width: 60, borderRadius: 8 }}
-                />
-              </td>
-              <td>
-                <button
-                  className="btn btn-warning btn-sm me-2"
-                  onClick={() => handleEdit(pc)}
-                >
-                  Modifica
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(pc.id)}
-                >
-                  Elimina
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
