@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function AddPcCardAdmin() {
   const [name, setName] = useState("");
@@ -12,7 +12,7 @@ function AddPcCardAdmin() {
   // Carica le card esistenti
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8080/api/pc-cards", {
+    fetch("https://nursing-erna-pcstorerob-41a02745.koyeb.app/api/pc-cards", {
       headers: token ? { Authorization: "Bearer " + token } : {},
     })
       .then((res) => res.json())
@@ -23,14 +23,17 @@ function AddPcCardAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nuovaCard = { name, description, price, image };
-    const res = await fetch("http://localhost:8080/api/pc-cards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify(nuovaCard),
-    });
+    const res = await fetch(
+      "https://nursing-erna-pcstorerob-41a02745.koyeb.app/api/pc-cards",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify(nuovaCard),
+      }
+    );
     if (res.ok) {
       setMessage("PC Card aggiunta con successo!");
       setName("");

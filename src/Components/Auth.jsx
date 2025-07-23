@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
 
+const BASE_URL = "https://nursing-erna-pcstorerob-41a02745.koyeb.app";
+
 function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState("");
@@ -11,7 +13,7 @@ function Auth() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:8080/auth/login", {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
@@ -19,12 +21,11 @@ function Auth() {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem("token", data.token);
-      localStorage.setItem("nome", data.nome); // Assicurati che il backend restituisca questi dati!
+      localStorage.setItem("nome", data.nome);
       localStorage.setItem("cognome", data.cognome);
       localStorage.setItem("ruolo", data.ruolo);
-      localStorage.setItem("email", data.email); // Assicurati che il backend restituisca anche l'email
-      // Chiudi la modale/login (es: setShowLogin(false))
-      window.location.reload(); // oppure aggiorna lo stato globale utente
+      localStorage.setItem("email", data.email);
+      window.location.reload();
     } else {
       alert("Login fallito");
     }
@@ -32,7 +33,7 @@ function Auth() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:8080/auth/register", {
+    const res = await fetch(`${BASE_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ nome, cognome, email, username, password }),

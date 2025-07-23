@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Table, Button, Form, Alert } from "react-bootstrap";
+
+const BASE_URL = "https://nursing-erna-pcstorerob-41a02745.koyeb.app";
 
 function Cart({ cart, setCart, onRemove }) {
   const navigate = useNavigate();
@@ -20,14 +22,13 @@ function Cart({ cart, setCart, onRemove }) {
       setError("Compila tutti i campi della carta.");
       return;
     }
-    // Prendi i dati dal localStorage
     const nomeCliente = localStorage.getItem("nome") || "";
     const destinatario = localStorage.getItem("email") || "";
-    const numeroOrdine = "ORD-" + Math.floor(Math.random() * 1000000); // Genera un numero ordine fittizio
+    const numeroOrdine = "ORD-" + Math.floor(Math.random() * 1000000);
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("http://localhost:8080/api/send-confirmation", {
+      const res = await fetch(`${BASE_URL}/api/send-confirmation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,6 @@ function Cart({ cart, setCart, onRemove }) {
     }
   };
 
-  // Quando l'utente clicca su checkout, controlla se è loggato
   const handleShowCheckout = () => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -60,6 +60,35 @@ function Cart({ cart, setCart, onRemove }) {
       setShowCheckout(true);
     }
   };
+
+  // Esempio per rimuovere un prodotto dal carrello
+  const handleRemove = async (id) => {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}/api/cart/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      // aggiorna lo stato del carrello
+    } else {
+      alert("Errore nella rimozione dal carrello");
+    }
+  };
+
+  // Esempio per ottenere il carrello
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch(`${BASE_URL}/api/cart`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setCart(data));
+  }, []);
 
   return (
     <Container className="py-5">
