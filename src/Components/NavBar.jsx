@@ -5,7 +5,7 @@ import logo from "../assets/img/logo.svg";
 import navIcon1 from "../assets/img/nav-icon1.svg";
 import navIcon2 from "../assets/img/nav-icon2.svg";
 import navIcon3 from "../assets/img/nav-icon3.svg";
-import { HashLink } from "react-router-hash-link";
+
 import userIcon from "../assets/img/user.svg";
 import cartIcon from "../assets/img/cart.svg";
 
@@ -39,12 +39,11 @@ export const NavBar = ({ cartCount }) => {
       setUser({ nome, cognome, email });
     }
     setRuolo(localStorage.getItem("ruolo"));
-    // Prendi avatar associato all'email
+
     setAvatar(localStorage.getItem(`avatar_${email}`) || "");
   }, []);
 
   useEffect(() => {
-    // Aggiorna avatar se cambia in localStorage
     const onStorage = () => {
       const email = localStorage.getItem("email");
       setAvatar(localStorage.getItem(`avatar_${email}`) || "");
