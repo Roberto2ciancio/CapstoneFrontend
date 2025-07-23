@@ -100,18 +100,7 @@ export const NavBar = ({ cartCount }) => {
             >
               Chi Siamo
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/pc-builder"
-              className={
-                activeLink === "PcBuilder"
-                  ? "active navbar-link"
-                  : "navbar-link"
-              }
-              onClick={() => onUpdateActiveLink("PcBuilder")}
-            >
-              Crea il tuo PC
-            </Nav.Link>
+
             {ruolo === "ADMIN" && (
               <Nav.Link
                 as={Link}
