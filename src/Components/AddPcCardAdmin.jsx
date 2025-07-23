@@ -6,7 +6,20 @@ function AddPcCardAdmin() {
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [message, setMessage] = useState("");
+  const [products, setProducts] = useState([]);
+  const [editId, setEditId] = useState(null);
 
+  // Carica le card esistenti
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8080/api/pc-cards", {
+      headers: token ? { Authorization: "Bearer " + token } : {},
+    })
+      .then((res) => res.json())
+      .then((data) => setProducts(Array.isArray(data) ? data : []));
+  }, [message]);
+
+  // Aggiungi o modifica card
   const handleSubmit = async (e) => {
     e.preventDefault();
     const nuovaCard = { name, description, price, image };
@@ -29,17 +42,6 @@ function AddPcCardAdmin() {
     }
   };
 
-  // Prepara la modifica
-  const handleEdit = (pc) => {
-    setName(pc.name);
-    setDescription(pc.description);
-    setPrice(pc.price);
-    setImage(pc.image);
-    setEditId(pc.id);
-    setMessage("");
-  };
-
-  // Solo admin può vedere il form
   const ruolo = localStorage.getItem("ruolo");
   if (ruolo !== "ADMIN") {
     return (
