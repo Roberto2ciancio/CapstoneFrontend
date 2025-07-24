@@ -284,24 +284,33 @@ export const NavBar = ({ cartCount, onExpand }) => {
             <Nav.Link
               as={Link}
               to="/shop"
-              style={{ color: "#fff" }}
-              onClick={() => setShow(false)}
+              style={{ color: "#fff", textDecoration: "none" }}
+              onClick={() => {
+                setShow(false);
+                onUpdateActiveLink("Shop");
+              }}
             >
               Shop
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/"
-              style={{ color: "#fff" }}
-              onClick={() => setShow(false)}
+              style={{ color: "#fff", textDecoration: "none" }}
+              onClick={() => {
+                setShow(false);
+                onUpdateActiveLink("Home");
+              }}
             >
               Home
             </Nav.Link>
             <Nav.Link
               as={Link}
               to="/chi-siamo"
-              style={{ color: "#fff" }}
-              onClick={() => setShow(false)}
+              style={{ color: "#fff", textDecoration: "none" }}
+              onClick={() => {
+                setShow(false);
+                onUpdateActiveLink("Chi Siamo");
+              }}
             >
               Chi Siamo
             </Nav.Link>
@@ -309,8 +318,11 @@ export const NavBar = ({ cartCount, onExpand }) => {
               <Nav.Link
                 as={Link}
                 to="/admin/backoffice"
-                style={{ color: "#fff" }}
-                onClick={() => setShow(false)}
+                style={{ color: "#fff", textDecoration: "none" }}
+                onClick={() => {
+                  setShow(false);
+                  onUpdateActiveLink("Backoffice");
+                }}
               >
                 Backoffice
               </Nav.Link>
@@ -323,6 +335,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 display: "flex",
                 alignItems: "center",
                 gap: "8px",
+                textDecoration: "none",
               }}
               onClick={() => setShow(false)}
             >
@@ -347,7 +360,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
             <Nav.Link
               as={Link}
               to={user ? "/profile" : "/account"}
-              style={{ color: "#fff" }}
+              style={{ color: "#fff", textDecoration: "none" }}
               onClick={() => setShow(false)}
             >
               {user ? "Profilo" : "Accedi"}
