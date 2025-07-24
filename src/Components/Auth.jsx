@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const BASE_URL = "https://nursing-erna-pcstorerob-41a02745.koyeb.app";
 
@@ -10,6 +11,7 @@ function Auth() {
   const [email, setEmail] = useState("");
   const [nome, setNome] = useState("");
   const [cognome, setCognome] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ function Auth() {
       localStorage.setItem("cognome", data.cognome);
       localStorage.setItem("ruolo", data.ruolo);
       localStorage.setItem("email", data.email);
-      window.location.reload();
+      navigate("/profile");
     } else {
       alert("Login fallito");
     }
