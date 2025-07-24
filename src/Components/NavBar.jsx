@@ -315,6 +315,43 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 Backoffice
               </Nav.Link>
             )}
+            <Nav.Link
+              as={Link}
+              to="/cart"
+              style={{
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+              onClick={() => setShow(false)}
+            >
+              Carrello
+              {cartCount > 0 && (
+                <span
+                  style={{
+                    background: "orange",
+                    color: "#222",
+                    borderRadius: "50%",
+                    padding: "2px 7px",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    minWidth: "20px",
+                    textAlign: "center",
+                  }}
+                >
+                  {cartCount}
+                </span>
+              )}
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to={user ? "/profile" : "/account"}
+              style={{ color: "#fff" }}
+              onClick={() => setShow(false)}
+            >
+              {user ? "Profilo" : "Accedi"}
+            </Nav.Link>
           </Nav>
         </Offcanvas.Body>
       </Offcanvas>
