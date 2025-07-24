@@ -22,7 +22,7 @@ function Shop() {
   const [hovered, setHovered] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/pc-cards")
+    fetch("https://nursing-erna-pcstorerob-41a02745.koyeb.app/api/pc-cards")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
