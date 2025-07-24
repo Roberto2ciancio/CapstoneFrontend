@@ -353,6 +353,75 @@ export const NavBar = ({ cartCount, onExpand }) => {
               {user ? "Profilo" : "Accedi"}
             </Nav.Link>
           </Nav>
+
+          {/* Social Media Icons Section */}
+          <div
+            style={{
+              marginTop: "30px",
+              paddingTop: "20px",
+              borderTop: "1px solid #444",
+            }}
+          >
+            <h6
+              style={{
+                color: "orange",
+                marginBottom: "15px",
+                fontWeight: 600,
+              }}
+            >
+              Seguici su
+            </h6>
+            <div
+              style={{
+                display: "flex",
+                gap: "15px",
+                justifyContent: "flex-start",
+              }}
+            >
+              <a
+                href="https://www.linkedin.com/in/roberto-ciancio-373ba5293/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ opacity: 0.8, transition: "opacity 0.2s" }}
+                onMouseEnter={(e) => (e.target.style.opacity = 1)}
+                onMouseLeave={(e) => (e.target.style.opacity = 0.8)}
+              >
+                <img
+                  src={navIcon1}
+                  alt="LinkedIn"
+                  style={{ width: 32, height: 32 }}
+                />
+              </a>
+              <a
+                href=""
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ opacity: 0.8, transition: "opacity 0.2s" }}
+                onMouseEnter={(e) => (e.target.style.opacity = 1)}
+                onMouseLeave={(e) => (e.target.style.opacity = 0.8)}
+              >
+                <img
+                  src={navIcon2}
+                  alt="Facebook"
+                  style={{ width: 32, height: 32 }}
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/robertociancio__/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ opacity: 0.8, transition: "opacity 0.2s" }}
+                onMouseEnter={(e) => (e.target.style.opacity = 1)}
+                onMouseLeave={(e) => (e.target.style.opacity = 0.8)}
+              >
+                <img
+                  src={navIcon3}
+                  alt="Instagram"
+                  style={{ width: 32, height: 32 }}
+                />
+              </a>
+            </div>
+          </div>
         </Offcanvas.Body>
       </Offcanvas>
     </>
