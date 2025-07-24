@@ -10,7 +10,9 @@ function ProductDetail({ onAddToCart }) {
   const [selectedModel, setSelectedModel] = useState("base");
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/pc-cards/${id}`)
+    fetch(
+      `https://nursing-erna-pcstorerob-41a02745.koyeb.app/api/pc-cards/${id}`
+    )
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
