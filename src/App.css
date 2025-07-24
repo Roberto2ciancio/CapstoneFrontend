@@ -41,6 +41,13 @@ button.ButtonHome:focus {
 .modern-card .card-title,
 .modern-card .card-text {
   color: black !important;
+
+
+}
+
+.white-placeholder::placeholder {
+  color: #fff !important;
+  opacity: 0.7;
 }
 
 
