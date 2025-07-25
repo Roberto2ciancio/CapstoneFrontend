@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, Container, Button, Form } from "react-bootstrap";
+import { Card, Container, Button, Form, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
@@ -9,24 +9,40 @@ function Profile() {
   const [avatar, setAvatar] = useState("");
   const [email, setEmail] = useState("");
   const [ruolo, setRuolo] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     setNome(localStorage.getItem("nome") || "");
     setCognome(localStorage.getItem("cognome") || "");
     setUsername(localStorage.getItem("username") || "");
-    const email = localStorage.getItem("email") || "";
-    setEmail(email);
+    const emailFromStorage = localStorage.getItem("email");
+    setEmail(emailFromStorage || "");
     setRuolo(localStorage.getItem("ruolo") || "");
-    setAvatar(localStorage.getItem(`avatar_${email}`) || "");
+    setAvatar(localStorage.getItem(`avatar_${emailFromStorage || ""}`) || "");
   }, []);
 
-  const handleSave = (e) => {
+  const handleSaveBasicInfo = (e) => {
     e.preventDefault();
     localStorage.setItem("nome", nome);
     localStorage.setItem("cognome", cognome);
+    setMessage("Informazioni di base salvate con successo!");
+    setTimeout(() => setMessage(""), 3000);
+    window.location.reload();
+  };
+
+  const handleSaveUsername = (e) => {
+    e.preventDefault();
     localStorage.setItem("username", username);
-    localStorage.setItem(`avatar_${email}`, avatar); // salva avatar per utente
+    setMessage("Username salvato con successo!");
+    setTimeout(() => setMessage(""), 3000);
+  };
+
+  const handleSaveAvatar = (e) => {
+    e.preventDefault();
+    localStorage.setItem(`avatar_${email}`, avatar);
+    setMessage("Immagine profilo salvata con successo!");
+    setTimeout(() => setMessage(""), 3000);
     window.location.reload();
   };
 
@@ -86,13 +102,21 @@ function Profile() {
                 }}
               />
             ) : (
-              <>
-                {nome[0] || ""}
-                {cognome[0] || ""}
-              </>
+              <span>
+                {nome && nome[0] ? nome[0].toUpperCase() : ""}
+                {cognome && cognome[0] ? cognome[0].toUpperCase() : ""}
+              </span>
             )}
           </div>
-          <Form onSubmit={handleSave}>
+
+          {message && (
+            <Alert variant="success" className="mb-3">
+              {message}
+            </Alert>
+          )}
+
+          {/* Basic Info Form */}
+          <Form onSubmit={handleSaveBasicInfo} className="mb-3">
             <Form.Group className="mb-2">
               <Form.Label style={{ color: "#ffa500" }}>Nome</Form.Label>
               <Form.Control
@@ -100,6 +124,11 @@ function Profile() {
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 required
+                style={{
+                  background: "#333",
+                  color: "#fff",
+                  border: "1px solid #555",
+                }}
               />
             </Form.Group>
             <Form.Group className="mb-2">
@@ -109,16 +138,58 @@ function Profile() {
                 value={cognome}
                 onChange={(e) => setCognome(e.target.value)}
                 required
+                style={{
+                  background: "#333",
+                  color: "#fff",
+                  border: "1px solid #555",
+                }}
               />
             </Form.Group>
+            <Button
+              variant="warning"
+              type="submit"
+              style={{
+                fontWeight: 600,
+                borderRadius: 8,
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            >
+              Salva Nome e Cognome
+            </Button>
+          </Form>
+
+          {/* Username Form */}
+          <Form onSubmit={handleSaveUsername} className="mb-3">
             <Form.Group className="mb-2">
               <Form.Label style={{ color: "#ffa500" }}>Username</Form.Label>
               <Form.Control
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                style={{
+                  background: "#333",
+                  color: "#fff",
+                  border: "1px solid #555",
+                }}
               />
             </Form.Group>
+            <Button
+              variant="outline-warning"
+              type="submit"
+              style={{
+                fontWeight: 600,
+                borderRadius: 8,
+                width: "100%",
+                marginBottom: "10px",
+              }}
+            >
+              Salva Username
+            </Button>
+          </Form>
+
+          {/* Avatar Form */}
+          <Form onSubmit={handleSaveAvatar} className="mb-3">
             <Form.Group className="mb-2">
               <Form.Label style={{ color: "#ffa500" }}>
                 URL Immagine profilo
@@ -128,37 +199,52 @@ function Profile() {
                 value={avatar}
                 onChange={(e) => setAvatar(e.target.value)}
                 placeholder="https://..."
+                style={{
+                  background: "#333",
+                  color: "#fff",
+                  border: "1px solid #555",
+                }}
               />
             </Form.Group>
-            <div className="mb-2" style={{ color: "#ccc", fontSize: "1.1rem" }}>
-              <i className="bi bi-envelope" style={{ marginRight: 6 }}></i>
-              {email}
-            </div>
-            <div
-              className="mb-3"
-              style={{
-                color: ruolo === "ADMIN" ? "orange" : "#aaa",
-                fontWeight: 600,
-              }}
-            >
-              <i className="bi bi-person-badge" style={{ marginRight: 6 }}></i>
-              {ruolo === "ADMIN" ? "Amministratore" : "Utente"}
-            </div>
             <Button
-              variant="warning"
+              variant="outline-warning"
               type="submit"
               style={{
                 fontWeight: 600,
                 borderRadius: 8,
                 width: "100%",
+                marginBottom: "15px",
               }}
             >
-              Salva modifiche
+              Salva Immagine
             </Button>
           </Form>
+
+          {email &&
+            email !== "" &&
+            email !== "null" &&
+            email !== "undefined" && (
+              <div
+                className="mb-2"
+                style={{ color: "#ccc", fontSize: "1.1rem" }}
+              >
+                <i className="bi bi-envelope" style={{ marginRight: 6 }}></i>
+                {email}
+              </div>
+            )}
+          <div
+            className="mb-3"
+            style={{
+              color: ruolo === "ADMIN" ? "orange" : "#aaa",
+              fontWeight: 600,
+            }}
+          >
+            <i className="bi bi-person-badge" style={{ marginRight: 6 }}></i>
+            {ruolo === "ADMIN" ? "Amministratore" : "Utente"}
+          </div>
+
           <Button
             variant="outline-light"
-            className="mt-3"
             style={{ borderRadius: 8, width: "100%" }}
             onClick={handleLogout}
           >
