@@ -80,16 +80,21 @@ export const NavBar = ({ cartCount, onExpand }) => {
           />
           <Navbar.Collapse id="basic-navbar-nav" className="d-none d-md-flex">
             <Nav className="ms-auto">
-              <Nav.Link
-                as={Link}
-                to="/shop"
-                className={
-                  activeLink === "Shop" ? "active navbar-link" : "navbar-link"
-                }
-                onClick={() => onUpdateActiveLink("Shop")}
+              <div
+                style={{
+                  color: "#fff",
+                  textDecoration: "none",
+                  padding: "0.5rem 1rem",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setShow(false);
+                  onUpdateActiveLink("Shop");
+                  window.location.href = "/shop";
+                }}
               >
                 Shop
-              </Nav.Link>
+              </div>
               <Nav.Link
                 as={Link}
                 to="/"
