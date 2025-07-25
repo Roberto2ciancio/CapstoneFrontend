@@ -1,8 +1,0 @@
-https://github.com/Roberto2ciancio/CapstoneBackend.git 
-
-
-link backend capstone farlo partire inserendo le credenziali di database (usando pgAdmin) e google app giuste nel proprio env.properties 
-
-se si vuole creare un account admin modificare il ruolo dal database. creandolo si potrà accedere alla sezione backoffice per aggiungere modificare ed eliminare card dallo shop. 
-inserendo un email valida durante la registrazione si avrà la conferma ordine a fine checkout. 
-
