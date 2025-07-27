@@ -92,6 +92,18 @@ export const NavBar = ({ cartCount, onExpand }) => {
               </Nav.Link>
               <Nav.Link
                 as={Link}
+                to="/portatili"
+                className={
+                  activeLink === "Portatili"
+                    ? "active navbar-link"
+                    : "navbar-link"
+                }
+                onClick={() => onUpdateActiveLink("Portatili")}
+              >
+                Portatili
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
                 to="/"
                 className={
                   activeLink === "Home" ? "active navbar-link" : "navbar-link"
@@ -291,6 +303,17 @@ export const NavBar = ({ cartCount, onExpand }) => {
               }}
             >
               Shop
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/portatili"
+              style={{ color: "#fff", textDecoration: "none" }}
+              onClick={() => {
+                setShow(false);
+                onUpdateActiveLink("Portatili");
+              }}
+            >
+              Portatili
             </Nav.Link>
             <Nav.Link
               as={Link}
