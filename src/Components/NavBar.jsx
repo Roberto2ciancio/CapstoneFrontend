@@ -86,6 +86,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 className={
                   activeLink === "Shop" ? "active navbar-link" : "navbar-link"
                 }
+                title="shop"
                 onClick={() => onUpdateActiveLink("Shop")}
               >
                 Shop
@@ -98,6 +99,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                     ? "active navbar-link"
                     : "navbar-link"
                 }
+                title="portatili"
                 onClick={() => onUpdateActiveLink("Portatili")}
               >
                 Portatili
@@ -108,6 +110,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 className={
                   activeLink === "Home" ? "active navbar-link" : "navbar-link"
                 }
+                title="Home"
                 onClick={() => onUpdateActiveLink("Home")}
               >
                 Home
@@ -120,6 +123,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                     ? "active navbar-link"
                     : "navbar-link"
                 }
+                title="Chi siamo"
                 onClick={() => onUpdateActiveLink("Chi Siamo")}
               >
                 Chi Siamo
@@ -134,6 +138,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                       ? "active navbar-link"
                       : "navbar-link"
                   }
+                  title="Backoffice"
                   onClick={() => onUpdateActiveLink("Backoffice")}
                 >
                   Backoffice
@@ -148,13 +153,13 @@ export const NavBar = ({ cartCount, onExpand }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <img src={navIcon1} alt="Instagram" />
+                  <img src={navIcon1} alt="linkedIn" title="LinkedIn" />
                 </a>
                 <a href="" target="_blank" rel="noopener noreferrer">
-                  <img src={navIcon2} alt="LinkedIn" />
+                  <img src={navIcon2} alt="Facebook" title="Facebook" />
                 </a>
                 <a href="https://www.instagram.com/robertociancio__/">
-                  <img src={navIcon3} alt="" />
+                  <img src={navIcon3} alt="Instagram" title="Instagram" />
                 </a>
               </div>
               <Link
@@ -424,7 +429,8 @@ export const NavBar = ({ cartCount, onExpand }) => {
               >
                 <img
                   src={navIcon1}
-                  alt="LinkedIn"
+                  alt="linkedin"
+                  title="linkedin"
                   style={{ width: 32, height: 32 }}
                 />
               </a>
@@ -439,6 +445,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 <img
                   src={navIcon2}
                   alt="Facebook"
+                  title="Facebook"
                   style={{ width: 32, height: 32 }}
                 />
               </a>
@@ -453,6 +460,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 <img
                   src={navIcon3}
                   alt="Instagram"
+                  title="Instagram"
                   style={{ width: 32, height: 32 }}
                 />
               </a>
