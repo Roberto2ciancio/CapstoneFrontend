@@ -38,17 +38,20 @@ function Profile() {
     setTimeout(() => setMessage(""), 3000);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    // Dispara un evento personalizzato per notificare il logout
+    window.dispatchEvent(new Event("userLoggedOut"));
+    navigate("/account");
+  };
+
   const handleSaveAvatar = (e) => {
     e.preventDefault();
     localStorage.setItem(`avatar_${email}`, avatar);
     setMessage("Immagine profilo salvata con successo!");
     setTimeout(() => setMessage(""), 3000);
-    window.location.reload();
-  };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate("/account");
+    // Dispara evento per aggiornare la navbar
+    window.dispatchEvent(new Event("storage"));
   };
 
   return (

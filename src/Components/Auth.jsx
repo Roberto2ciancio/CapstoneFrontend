@@ -35,6 +35,9 @@ function Auth() {
         localStorage.setItem("ruolo", data.ruolo);
         localStorage.setItem("email", data.email);
 
+        // Dispara un evento personalizzato per notificare il cambio di login
+        window.dispatchEvent(new Event("userLoggedIn"));
+
         // Simula un piccolo delay per mostrare l'animazione
         setTimeout(() => {
           setLoading(false);

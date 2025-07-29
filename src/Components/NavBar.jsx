@@ -3,7 +3,7 @@ import { Navbar, Nav, Container, Offcanvas } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import logo from "../assets/img/Logo.svg";
 import navIcon1 from "../assets/img/nav-icon1.svg";
-import navIcon2 from "../assets/img/nav-icon2.svg";
+import githubIcon from "../assets/img/Github.svg";
 import navIcon3 from "../assets/img/nav-icon3.svg";
 
 import userIcon from "../assets/img/user.svg";
@@ -17,6 +17,23 @@ export const NavBar = ({ cartCount, onExpand }) => {
   const [activeLink, setActiveLink] = useState("Home");
   const [expanded, setExpanded] = useState(false);
   const [show, setShow] = useState(false);
+
+  // Funzione per aggiornare i dati utente
+  const updateUserData = () => {
+    const nome = localStorage.getItem("nome");
+    const cognome = localStorage.getItem("cognome");
+    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("token");
+
+    if (token && nome && cognome) {
+      setUser({ nome, cognome, email });
+    } else {
+      setUser(null);
+    }
+
+    setRuolo(localStorage.getItem("ruolo") || "");
+    setAvatar(localStorage.getItem(`avatar_${email}`) || "");
+  };
 
   useEffect(() => {
     const onScroll = () => {
@@ -33,25 +50,38 @@ export const NavBar = ({ cartCount, onExpand }) => {
   }, []);
 
   useEffect(() => {
-    const nome = localStorage.getItem("nome");
-    const cognome = localStorage.getItem("cognome");
-    const email = localStorage.getItem("email");
-    const token = localStorage.getItem("token");
-    if (token && nome && cognome) {
-      setUser({ nome, cognome, email });
-    }
-    setRuolo(localStorage.getItem("ruolo"));
-
-    setAvatar(localStorage.getItem(`avatar_${email}`) || "");
+    // Carica i dati iniziali
+    updateUserData();
   }, []);
 
   useEffect(() => {
+    // Listener per cambiamenti nel localStorage (avatar)
     const onStorage = () => {
       const email = localStorage.getItem("email");
       setAvatar(localStorage.getItem(`avatar_${email}`) || "");
     };
+
+    // Listener per login dell'utente
+    const onUserLogin = () => {
+      updateUserData();
+    };
+
+    // Listener per logout dell'utente
+    const onUserLogout = () => {
+      setUser(null);
+      setRuolo("");
+      setAvatar("");
+    };
+
     window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
+    window.addEventListener("userLoggedIn", onUserLogin);
+    window.addEventListener("userLoggedOut", onUserLogout);
+
+    return () => {
+      window.removeEventListener("storage", onStorage);
+      window.removeEventListener("userLoggedIn", onUserLogin);
+      window.removeEventListener("userLoggedOut", onUserLogout);
+    };
   }, []);
 
   const onUpdateActiveLink = (value) => {
@@ -90,19 +120,6 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 onClick={() => onUpdateActiveLink("Shop")}
               >
                 Shop
-              </Nav.Link>
-              <Nav.Link
-                as={Link}
-                to="/portatili"
-                className={
-                  activeLink === "Portatili"
-                    ? "active navbar-link"
-                    : "navbar-link"
-                }
-                title="portatili"
-                onClick={() => onUpdateActiveLink("Portatili")}
-              >
-                Portatili
               </Nav.Link>
               <Nav.Link
                 as={Link}
@@ -155,8 +172,12 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 >
                   <img src={navIcon1} alt="linkedIn" title="LinkedIn" />
                 </a>
-                <a href="" target="_blank" rel="noopener noreferrer">
-                  <img src={navIcon2} alt="Facebook" title="Facebook" />
+                <a
+                  href="https://github.com/Roberto2ciancio"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={githubIcon} alt="GitHub" title="GitHub" />
                 </a>
                 <a href="https://www.instagram.com/robertociancio__/">
                   <img src={navIcon3} alt="Instagram" title="Instagram" />
@@ -311,17 +332,6 @@ export const NavBar = ({ cartCount, onExpand }) => {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/portatili"
-              style={{ color: "#fff", textDecoration: "none" }}
-              onClick={() => {
-                setShow(false);
-                onUpdateActiveLink("Portatili");
-              }}
-            >
-              Portatili
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
               to="/"
               style={{ color: "#fff", textDecoration: "none" }}
               onClick={() => {
@@ -435,7 +445,7 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 />
               </a>
               <a
-                href=""
+                href="https://github.com/Roberto2ciancio"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ opacity: 0.8, transition: "opacity 0.2s" }}
@@ -443,9 +453,9 @@ export const NavBar = ({ cartCount, onExpand }) => {
                 onMouseLeave={(e) => (e.target.style.opacity = 0.8)}
               >
                 <img
-                  src={navIcon2}
-                  alt="Facebook"
-                  title="Facebook"
+                  src={githubIcon}
+                  alt="GitHub"
+                  title="GitHub"
                   style={{ width: 32, height: 32 }}
                 />
               </a>
