@@ -9,6 +9,7 @@ import {
   Card,
   Row,
   Col,
+  Spinner,
 } from "react-bootstrap";
 
 const BASE_URL = "https://nursing-erna-pcstorerob-41a02745.koyeb.app";
@@ -23,6 +24,7 @@ function Cart({ cart, setCart, onRemove }) {
   const [cvv, setCvv] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
@@ -57,10 +59,14 @@ function Cart({ cart, setCart, onRemove }) {
   const handleCheckout = async (e) => {
     e.preventDefault();
     setError("");
+
     if (!cardNumber || !expiry || !cvv) {
       setError("Compila tutti i campi della carta.");
       return;
     }
+
+    setCheckoutLoading(true);
+
     const nomeCliente = localStorage.getItem("nome") || "";
     const destinatario = localStorage.getItem("email") || "";
     const numeroOrdine = "ORD-" + Math.floor(Math.random() * 1000000);
@@ -79,15 +85,24 @@ function Cart({ cart, setCart, onRemove }) {
           destinatario,
         }),
       });
-      if (res.ok) {
-        setEmailSent(true);
-        setCart([]);
-        localStorage.setItem("cart", "[]");
-      } else {
-        setError("Errore nell'invio dell'email.");
-      }
+
+      // Simula un delay per mostrare l'animazione
+      setTimeout(() => {
+        if (res.ok) {
+          setEmailSent(true);
+          // SOLO dopo il checkout riuscito svuota il carrello
+          setCart([]);
+          localStorage.setItem("cart", JSON.stringify([]));
+        } else {
+          setError("Errore nell'invio dell'email.");
+        }
+        setCheckoutLoading(false);
+      }, 2000);
     } catch {
-      setError("Errore di rete.");
+      setTimeout(() => {
+        setError("Errore di rete.");
+        setCheckoutLoading(false);
+      }, 2000);
     }
   };
 
@@ -100,40 +115,138 @@ function Cart({ cart, setCart, onRemove }) {
     }
   };
 
-  // Esempio per rimuovere un prodotto dal carrello
-  const handleRemove = async (id) => {
-    const token = localStorage.getItem("token");
-    const res = await fetch(`${BASE_URL}/api/cart/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "application/json",
-      },
-    });
-    if (res.ok) {
-      // aggiorna lo stato del carrello
-    } else {
-      alert("Errore nella rimozione dal carrello");
-    }
-  };
-
-  // Esempio per ottenere il carrello
+  // Carica il carrello solo se vuoto e c'è localStorage
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    fetch(`${BASE_URL}/api/cart`, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setCart(data));
-  }, []);
+    if (cart.length === 0) {
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        try {
+          const parsedCart = JSON.parse(savedCart);
+          if (Array.isArray(parsedCart) && parsedCart.length > 0) {
+            setCart(parsedCart);
+          }
+        } catch (err) {
+          console.error("Errore nel parsing del carrello:", err);
+        }
+      }
+    }
+  }, []); // Rimosso setCart dalle dipendenze
+
+  // Salva il carrello nel localStorage quando cambia
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
+
+  if (checkoutLoading) {
+    return (
+      <Container
+        className="py-5 d-flex justify-content-center align-items-center"
+        style={{ minHeight: "60vh" }}
+      >
+        <Card
+          style={{
+            background: "rgba(30,30,30,0.97)",
+            color: "#fff",
+            border: "none",
+            borderRadius: 18,
+            boxShadow: "0 4px 24px 0 rgba(255,140,0,0.18)",
+            padding: "3rem",
+            textAlign: "center",
+            minWidth: 400,
+          }}
+        >
+          <div
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius: "50%",
+              background: "linear-gradient(135deg, orange 60%, #23272b 100%)",
+              margin: "0 auto 2rem auto",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              animation:
+                "checkoutPulse 1.5s infinite, rotate 3s linear infinite",
+            }}
+          >
+            <Spinner
+              animation="border"
+              role="status"
+              style={{
+                color: "#23272b",
+                width: 50,
+                height: 50,
+                borderWidth: 4,
+              }}
+            />
+          </div>
+
+          <h3 style={{ color: "orange", marginBottom: "1rem" }}>
+            Elaborazione pagamento...
+          </h3>
+
+          <p
+            style={{
+              color: "#ccc",
+              fontSize: "1.1rem",
+              marginBottom: "1.5rem",
+            }}
+          >
+            {paymentMethod === "full"
+              ? `Stiamo processando il tuo pagamento di €${total.toFixed(2)}`
+              : `Stiamo configurando il tuo piano a ${installmentPlan} rate`}
+          </p>
+
+          <div
+            style={{
+              background: "rgba(255,140,0,0.1)",
+              border: "1px solid orange",
+              borderRadius: 8,
+              padding: "1rem",
+              marginTop: "1.5rem",
+            }}
+          >
+            <small style={{ color: "#ffa500" }}>
+              <strong>🔒 Transazione sicura</strong>
+              <br />I tuoi dati sono protetti con crittografia SSL
+            </small>
+          </div>
+
+          <style>
+            {`
+              @keyframes checkoutPulse {
+                0% { 
+                  transform: scale(1); 
+                  box-shadow: 0 2px 12px rgba(255,140,0,0.18); 
+                }
+                50% { 
+                  transform: scale(1.08); 
+                  box-shadow: 0 6px 30px rgba(255,140,0,0.4); 
+                }
+                100% { 
+                  transform: scale(1); 
+                  box-shadow: 0 2px 12px rgba(255,140,0,0.18); 
+                }
+              }
+              
+              @keyframes rotate {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+              }
+            `}
+          </style>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container className="py-5">
       <h2 style={{ color: "orange" }}>Il tuo carrello</h2>
       {cart.length === 0 ? (
-        <p>Il carrello è vuoto.</p>
+        <p style={{ color: "#fff" }}>Il carrello è vuoto.</p>
       ) : (
         <>
           <Table striped bordered hover variant="dark" className="mt-4">
@@ -176,6 +289,12 @@ function Cart({ cart, setCart, onRemove }) {
               variant="success"
               className="mt-3"
               onClick={handleShowCheckout}
+              style={{
+                fontWeight: 600,
+                borderRadius: 8,
+                fontSize: 16,
+                padding: "12px 24px",
+              }}
             >
               Procedi al checkout
             </Button>
@@ -187,12 +306,13 @@ function Cart({ cart, setCart, onRemove }) {
                 Modalità di pagamento
               </h4>
 
-              {/* Payment Method Selection */}
               <Card
                 style={{
                   background: "rgba(30,30,30,0.97)",
                   color: "#fff",
                   marginBottom: "20px",
+                  borderRadius: 12,
+                  border: "none",
                 }}
               >
                 <Card.Body>
@@ -235,6 +355,7 @@ function Cart({ cart, setCart, onRemove }) {
                                     : "1px solid #444",
                                 cursor: "pointer",
                                 transition: "all 0.2s",
+                                borderRadius: 8,
                               }}
                               onClick={() => setInstallmentPlan(option.months)}
                             >
@@ -274,6 +395,7 @@ function Cart({ cart, setCart, onRemove }) {
                           background: "rgba(0,123,255,0.1)",
                           border: "1px solid #007bff",
                           color: "#fff",
+                          borderRadius: 8,
                         }}
                       >
                         <small>
@@ -302,7 +424,19 @@ function Cart({ cart, setCart, onRemove }) {
               {/* Credit Card Form */}
               <Form onSubmit={handleCheckout}>
                 <h5 style={{ color: "orange" }}>Dati carta</h5>
-                {error && <Alert variant="danger">{error}</Alert>}
+                {error && (
+                  <Alert
+                    variant="danger"
+                    style={{
+                      background: "rgba(220, 53, 69, 0.1)",
+                      border: "1px solid #dc3545",
+                      color: "#ff6b6b",
+                      borderRadius: 8,
+                    }}
+                  >
+                    {error}
+                  </Alert>
+                )}
 
                 <Form.Group className="mb-2">
                   <Form.Label style={{ color: "#fff" }}>
@@ -318,6 +452,7 @@ function Cart({ cart, setCart, onRemove }) {
                       background: "#333",
                       color: "#fff",
                       border: "1px solid #555",
+                      borderRadius: 8,
                     }}
                   />
                 </Form.Group>
@@ -339,6 +474,7 @@ function Cart({ cart, setCart, onRemove }) {
                           background: "#333",
                           color: "#fff",
                           border: "1px solid #555",
+                          borderRadius: 8,
                         }}
                         className="white-placeholder"
                       />
@@ -358,6 +494,7 @@ function Cart({ cart, setCart, onRemove }) {
                           background: "#333",
                           color: "#fff",
                           border: "1px solid #555",
+                          borderRadius: 8,
                         }}
                       />
                     </Form.Group>
@@ -368,7 +505,13 @@ function Cart({ cart, setCart, onRemove }) {
                   type="submit"
                   variant="warning"
                   className="w-100 mt-3"
-                  style={{ fontSize: "18px", fontWeight: "bold" }}
+                  style={{
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                    borderRadius: 8,
+                    padding: "14px 0",
+                  }}
+                  disabled={checkoutLoading}
                 >
                   {paymentMethod === "full"
                     ? `Conferma acquisto - €${total.toFixed(2)}`
@@ -381,8 +524,20 @@ function Cart({ cart, setCart, onRemove }) {
           )}
 
           {emailSent && (
-            <Alert variant="success" className="mt-4">
-              <h4>Grazie per il tuo acquisto!</h4>
+            <Alert
+              variant="success"
+              className="mt-4"
+              style={{
+                background: "rgba(40, 167, 69, 0.1)",
+                border: "1px solid #28a745",
+                color: "#4caf50",
+                borderRadius: 12,
+                padding: "1.5rem",
+              }}
+            >
+              <h4 style={{ color: "#4caf50" }}>
+                🎉 Grazie per il tuo acquisto!
+              </h4>
               <p>
                 Riceverai una email di conferma con i dettagli della spedizione
                 {paymentMethod === "installments" &&
